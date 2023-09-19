@@ -39,10 +39,12 @@ WHERE staff_id = 2;
 SELECT COUNT(DISTINCT district)
 FROM address;
 
---!!!!7. What film has the most actors in it? (use film_actor table and get film_id)
-SELECT DISTINCT actor_id
+--7. What film has the most actors in it? (use film_actor table and get film_id)
+-- FILM 508
+SELECT COUNT(actor_id), film_id
 FROM film_actor
-ORDER BY DESC;
+GROUP BY film_id
+ORDER BY COUNT(actor_id) DESC;
 
 --8. From store_id 1, how many customers have a last name ending with ‘es’? (use customer table)
 -- 6
@@ -50,17 +52,20 @@ SELECT *
 FROM customer
 WHERE store_id = '1' AND last_name LIKE '___es%';
 
---!!!9. How many payment amounts (4.99, 5.99, etc.) had a number of rentals above 250 for customers with ids between 380 and 430? (use group by and having > 250)
+--9. How many payment amounts (4.99, 5.99, etc.) had a number of rentals above 250 for customers with ids between 380 and 430? (use group by and having > 250)
+--NONE
+SELECT COUNT(amount), rental_id, customer_id
+FROM payment
+WHERE customer_id BETWEEN 380 AND 430
+GROUP BY customer_id, rental_id
+HAVING COUNT(rental_id) > 250
 
---!!!!10. Within the film table, how many rating categories are there? And what rating has the most movies total
--- 5 rating categories
+--10. Within the film table, how many rating categories are there? And what rating has the most movies total
+-- 5 rating categories, pg-13 has the most movies
 SELECT COUNT(DISTINCT rating)
 FROM film;
 
-SELECT *
+SELECT COUNT(film_id), rating
 FROM film
-
-SELECT DISTINCT rating, title
-FROM film
-ORDER BY rating
-WHERE rating = 'G'
+GROUP BY rating
+ORDER BY COUNT(film_id) DESC;
